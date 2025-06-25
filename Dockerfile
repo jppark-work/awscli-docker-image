@@ -2,7 +2,6 @@ FROM python:3.8-alpine
 
 # 필수 패키지 설치
 RUN apk add --no-cache \
-    bash \
     curl \
     docker-cli \
     libffi-dev \
@@ -13,10 +12,11 @@ RUN apk add --no-cache \
     py3-pip \
     make
 
-# AWS CLI v1.0 설치
+# AWS CLI v1 설치
 RUN pip install "awscli<2"
 
-# 버전 확인
+# 버전 확인 (빌드시 로그 확인용)
 RUN aws --version && docker --version
 
-ENTRYPOINT ["/bin/bash"]
+# ENTRYPOINT: sh 사용
+ENTRYPOINT ["/bin/sh"]
