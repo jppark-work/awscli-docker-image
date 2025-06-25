@@ -1,19 +1,22 @@
-# Dockerfile
-FROM alpine:3.20
+FROM python:3.8-alpine
 
+# 필수 패키지 설치
 RUN apk add --no-cache \
     bash \
     curl \
-    unzip \
     docker-cli \
-    python3 \
-    py3-pip
+    libffi-dev \
+    openssl-dev \
+    gcc \
+    musl-dev \
+    python3-dev \
+    py3-pip \
+    make
 
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
-    unzip awscliv2.zip && \
-    ./aws/install && \
-    rm -rf awscliv2.zip aws
+# AWS CLI v1.0 설치
+RUN pip install "awscli<2"
 
+# 버전 확인
 RUN aws --version && docker --version
 
 ENTRYPOINT ["/bin/bash"]
