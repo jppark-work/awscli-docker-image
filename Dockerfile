@@ -1,22 +1,14 @@
 FROM python:3.8-alpine
 
-# 필수 패키지 설치
+# 필요한 최소 패키지로만 설치
 RUN apk add --no-cache \
     curl \
     docker-cli \
-    libffi-dev \
-    openssl-dev \
-    gcc \
-    musl-dev \
-    python3-dev \
     py3-pip \
-    make
+    && pip install "awscli<2>"
 
-# AWS CLI v1 설치
-RUN pip install "awscli<2"
-
-# 버전 확인 (빌드시 로그 확인용)
+# 버전 확인용 (빌드 중 로그로 확인)
 RUN aws --version && docker --version
 
-# ENTRYPOINT: sh 사용
+# 기본 쉘
 ENTRYPOINT ["/bin/sh"]
