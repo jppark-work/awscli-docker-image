@@ -1,6 +1,6 @@
 FROM docker:20.10-dind
 
-# 필수 패키지 설치 + AWS CLI v1 설치
+# 휠 빌드 의존성 + awscli v1 설치
 RUN apk --no-cache add \
     python3 \
     py3-pip \
@@ -11,9 +11,13 @@ RUN apk --no-cache add \
     git \
     go \
     make \
+    build-base \
+    libffi-dev \
+    openssl-dev \
+    && pip3 install --upgrade pip setuptools wheel \
     && pip3 install --no-cache-dir awscli==1.27.160
 
-# docker-credential-ecr-login 설치
+# ECR Credential Helper 설치
 RUN git clone https://github.com/awslabs/amazon-ecr-credential-helper /tmp/ecr-helper && \
     cd /tmp/ecr-helper && \
     make && \
