@@ -1,14 +1,19 @@
-FROM python:3.8-alpine
+FROM docker:20.10-dind-rootless
 
-# 필요한 최소 패키지로만 설치
-RUN apk add --no-cache \
+# 필수 패키지 설치
+RUN apt-get update && apt-get install -y \
     curl \
-    docker-cli \
-    py3-pip \
-    && pip install "awscli<2>"
+    unzip \
+    python3 \
+    ca-certificates \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# 버전 확인용 (빌드 중 로그로 확인)
-RUN aws --version && docker --version
+# AWS CLI v2 설치
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf awscliv2.zip aws
 
-# 기본 쉘
-ENTRYPOINT ["/bin/sh"]
+# 버전 확인
+RUN docker --version && aws --version
